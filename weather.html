@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Updates</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" href="Logo.ico" type="image/x-icon"/>
+</head>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-red-700 text-white p-4 text-center">
+    <h1 class="text-2xl font-bold">Weather Updates</h1>
+    <p>Check the weather and make thorough decisions about today's racing</p>
+    <p id="lastVisited" class="text-sm opacity-75 mt-1"></p>
+  </header>
+
+  <nav class="bg-white shadow p-4 flex justify-center space-x-4">
+    <a href="index.html" class="text-red-700 font-bold">Dashboard</a>
+    <a href="incident_log.html" class="text-red-700 font-bold">Incident Log</a>
+    <a href="communication.html" class="text-red-700 font-bold">Communication</a>
+    <a href="team.html" class="text-red-700 font-bold">Control Team</a>
+    <a href="weather.html" class="text-red-700 font-bold">Weather Updates</a>
+  </nav>
+
+  <main class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Weather Generator Section -->
+    <section class="bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-xl font-bold mb-4 text-red-700">Current Weather</h2>
+      <p class="mb-4">Click below to check today's weather conditions:</p>
+      <button id="generateWeather" class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition mb-4">
+        Check Today's Weather
+      </button>
+      <div id="weatherResult" class="hidden p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="font-bold mb-2">Today's Forecast:</h3>
+        <p id="weatherCondition" class="text-xl"></p>
+      </div>
+    </section>
+
+    <!-- Race Decision Section -->
+    <section class="bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-xl font-bold mb-4 text-red-700">Race Decision</h2>
+      <p class="mb-4">Based on the weather, select an appropriate action:</p>
+      <div id="decisionOptions" class="hidden space-y-2">
+        <button data-delay="0" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+          Proceed as Normal
+        </button>
+        <button data-delay="15" class="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+          Delay by 15 Minutes
+        </button>
+        <button data-delay="30" class="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+          Delay by 30 Minutes
+        </button>
+        <button data-delay="45" class="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+          Delay by 45 Minutes
+        </button>
+        <button data-delay="60" class="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+          Delay by 60 Minutes
+        </button>
+        <button data-delay="90" class="w-full bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition">
+          Delay by 90 Minutes
+        </button>
+        <button data-delay="120" class="w-full bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition">
+          Delay by 120 Minutes
+        </button>
+        <button data-delay="180" class="w-full bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition">
+          Delay by 180 Minutes
+        </button>
+        <button data-delay="cancel" class="w-full bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition">
+          Cancel Race
+        </button>
+      </div>
+      <div id="decisionResult" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="font-bold mb-2">Decision:</h3>
+        <p id="decisionText"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-200 text-center p-4 mt-6">
+    <p>&copy; 2025 TT Race Control Centre</p>
+  </footer>
+
+  <script>
+    // Weather Generator Logic
+    const weatherConditions = [
+      { name: "Sun", probability: 40 },
+      { name: "Rain", probability: 20 },
+      { name: "Storm", probability: 3 },
+      { name: "Fog on course", probability: 7 },
+      { name: "High wind levels on mountain", probability: 20 },
+      { name: "Fog on mountain", probability: 10 }
+    ];
+
+    document.getElementById('generateWeather').addEventListener('click', function() {
+      // Generate random weather based on probabilities
+      const random = Math.random() * 100;
+      let cumulativeProbability = 0;
+      let selectedWeather = null;
+
+      for (const condition of weatherConditions) {
+        cumulativeProbability += condition.probability;
+        if (random <= cumulativeProbability) {
+          selectedWeather = condition.name;
+          break;
+        }
+      }
+
+      // Display the result
+      const weatherResult = document.getElementById('weatherResult');
+      const weatherCondition = document.getElementById('weatherCondition');
+      
+      weatherCondition.textContent = selectedWeather;
+      weatherResult.classList.remove('hidden');
+
+      // Show decision options
+      document.getElementById('decisionOptions').classList.remove('hidden');
+      document.getElementById('decisionResult').classList.add('hidden');
+    });
+
+    // Race Decision Logic
+    const decisionButtons = document.querySelectorAll('#decisionOptions button');
+    decisionButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const delay = this.getAttribute('data-delay');
+        const weather = document.getElementById('weatherCondition').textContent;
+        let decisionText = '';
+        
+        if (delay === '0') {
+          decisionText = `Race will proceed as normal. Weather: ${weather}.`;
+        } else if (delay === 'cancel') {
+          decisionText = `Race CANCELLED due to ${weather}.`;
+        } else {
+          decisionText = `Race DELAYED by ${delay} minutes due to ${weather}.`;
+        }
+
+        document.getElementById('decisionText').textContent = decisionText;
+        document.getElementById('decisionResult').classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>

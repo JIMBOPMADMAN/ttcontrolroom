@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Communication & Alerts</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" href="Logo.ico" type="image/x-icon"/>
+</head>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-red-700 text-white p-4 text-center">
+    <h1 class="text-2xl font-bold">Communication & Alerts</h1>
+    <p>Simulate radio alerts from marshals and the Race Control response</p>
+  </header>
+
+  <nav class="bg-white shadow p-4 flex justify-center space-x-4">
+    <a href="index.html" class="text-red-700 font-bold">Dashboard</a>
+    <a href="incident_log.html" class="text-red-700 font-bold">Incident Log</a>
+    <a href="communication.html" class="text-red-700 font-bold">Communication</a>
+    <a href="team.html" class="text-red-700 font-bold">Control Team</a>
+    <a href="weather.html" class="text-red-700 font-bold">Weather Updates</a>
+  </nav>
+
+  <main class="p-6">
+    <form id="alertForm" class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-xl font-semibold mb-2">Push Alert from Marshal</h2>
+      <label class="block mb-2">Location:
+        <input type="text" id="locationInput" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g. Glencrutchery Road">
+      </label>
+      <label class="block mb-2">Message:
+        <input type="text" id="messageInput" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g. Rider down, obstacle on road">
+      </label>
+      <button type="submit" class="bg-red-600 text-white px-4 py-2 mt-2 rounded">Send Alert</button>
+    </form>
+
+    <section>
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-xl font-semibold">Active Alerts</h2>
+        <button onclick="clearAlerts()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Clear All</button>
+      </div>
+      <ul id="alertList" class="space-y-4">
+        <!-- Alerts will be added here dynamically -->
+      </ul>
+    </section>
+  </main>
+
+  <footer class="bg-gray-200 text-center p-4 mt-6">
+    <p>&copy; 2025 TT Race Control Centre</p>
+  </footer>
+
+  <script>
+    const alertForm = document.getElementById("alertForm");
+    const alertList = document.getElementById("alertList");
+
+    // Load alerts from localStorage when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedAlerts = localStorage.getItem('ttAlerts');
+      if (savedAlerts) {
+        const alerts = JSON.parse(savedAlerts);
+        alerts.forEach(alert => {
+          addAlertToDOM(alert);
+        });
+      }
+    });
+
+    // Function to add alert to DOM
+    function addAlertToDOM(alert) {
+      const li = document.createElement("li");
+      li.className = "bg-white p-4 rounded shadow";
+      li.innerHTML = `<p><strong>Location:</strong> ${alert.location}</p>
+                     <p><strong>Message:</strong> ${alert.message}</p>`;
+      alertList.appendChild(li);
+    }
+
+    // Function to save all alerts to localStorage
+    function saveAlertsToStorage() {
+      const alerts = [];
+      const listItems = alertList.querySelectorAll('li');
+      
+      listItems.forEach(item => {
+        alerts.push({
+          location: item.querySelector('p:nth-child(1)').textContent.replace('Location: ', ''),
+          message: item.querySelector('p:nth-child(2)').textContent.replace('Message: ', '')
+        });
+      });
+      
+      localStorage.setItem('ttAlerts', JSON.stringify(alerts));
+    }
+
+    alertForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const location = document.getElementById("locationInput").value.trim();
+      const message = document.getElementById("messageInput").value.trim();
+
+      if (location && message) {
+        const alert = { location, message };
+        addAlertToDOM(alert);
+        saveAlertsToStorage();
+        alertForm.reset();
+      }
+    });
+
+    function clearAlerts() {
+      if (confirm('Are you sure you want to clear all alerts?')) {
+        alertList.innerHTML = "";
+        localStorage.removeItem('ttAlerts');
+      }
+    }
+
+    // Optional: Save data when page is unloaded
+    window.addEventListener('beforeunload', saveAlertsToStorage);
+  </script>
+</body>
+</html>

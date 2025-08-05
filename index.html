@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TT Race Control Simulation</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" href="Logo.ico" type="image/x-icon"/>
+  <style>
+    .flashing-flag {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+      animation: flash 1s infinite;
+      display: none;
+    }
+
+    .red-flag {
+      background-color: red;
+    }
+
+    .yellow-flag {
+      background-color: yellow;
+      top: 5rem;
+    }
+
+    @keyframes flash {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-red-700 text-white p-6 text-center">
+    <h1 class="text-3xl font-bold">TT Race Control Simulation</h1>
+    <p class="mt-2">Experience the nerve centre of the TT</p>
+  </header>
+
+  <nav class="bg-white shadow p-4 flex justify-center space-x-4">
+    <a href="index.html" class="text-red-700 font-bold">Dashboard</a>
+    <a href="incident_log.html" class="text-red-700 font-bold">Incident Log</a>
+    <a href="communication.html" class="text-red-700 font-bold">Communication</a>
+    <a href="team.html" class="text-red-700 font-bold">Control Team</a>
+    <a href="weather.html" class="text-red-700 font-bold">Weather Updates</a>
+  </nav>
+
+  <main class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="bg-white rounded shadow p-6 text-center">
+      <h2 class="text-xl font-semibold mb-4">Digital Flag System</h2>
+      <div class="grid grid-cols-2 gap-4 justify-items-center">
+        <button onclick="triggerRedFlags()" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 w-full">Trigger Red Flag</button>
+        <button onclick="clearRedFlags()" class="bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700 w-full">Clear Red Flags</button>
+        <button onclick="triggerYellowFlags()" class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600 w-full">Trigger Yellow Flag</button>
+        <button onclick="clearYellowFlags()" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 w-full">Clear Yellow Flags</button>
+      </div>
+      <p class="mt-4 text-sm text-gray-600">Simulates a red or yellow flag across the 37.73-mile circuit</p>
+    </div>
+
+    <div class="bg-white rounded shadow p-6 text-center">
+      <h2 class="text-xl font-semibold mb-4">Live Tracker</h2>
+      <a href="https://timing.iomttraces.com/schedule.html" target="_blank" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">View Tracker</a>
+      <p class="mt-2 text-sm text-gray-600">Real-time position of each competitor</p>
+    </div>
+  </main>
+
+  <div id="flagAlert" class="flashing-flag red-flag"></div>
+  <div id="yellowFlag" class="flashing-flag yellow-flag"></div>
+
+  <script>
+    // Load saved flag states when page loads
+    window.addEventListener('load', function() {
+      const redFlagState = localStorage.getItem('redFlagActive');
+      const yellowFlagState = localStorage.getItem('yellowFlagActive');
+      
+      if (redFlagState === 'true') {
+        document.getElementById('flagAlert').style.display = 'block';
+      }
+      
+      if (yellowFlagState === 'true') {
+        document.getElementById('yellowFlag').style.display = 'block';
+      }
+    });
+
+    function triggerRedFlags() {
+      alert("All red flags have been triggered!");
+      document.getElementById('flagAlert').style.display = 'block';
+      localStorage.setItem('redFlagActive', 'true');
+    }
+
+    function clearRedFlags() {
+      document.getElementById('flagAlert').style.display = 'none';
+      alert("All red flags have been cleared.");
+      localStorage.setItem('redFlagActive', 'false');
+    }
+
+    function triggerYellowFlags() {
+      alert("All yellow flags have been triggered!");
+      document.getElementById('yellowFlag').style.display = 'block';
+      localStorage.setItem('yellowFlagActive', 'true');
+    }
+
+    function clearYellowFlags() {
+      document.getElementById('yellowFlag').style.display = 'none';
+      alert("Yellow flag cleared.");
+      localStorage.setItem('yellowFlagActive', 'false');
+    }
+
+    // Save flag states when page is unloaded (optional)
+    window.addEventListener('beforeunload', function() {
+      const redFlagActive = document.getElementById('flagAlert').style.display === 'block';
+      const yellowFlagActive = document.getElementById('yellowFlag').style.display === 'block';
+      
+      localStorage.setItem('redFlagActive', redFlagActive.toString());
+      localStorage.setItem('yellowFlagActive', yellowFlagActive.toString());
+    });
+  </script>
+
+  <footer class="bg-gray-200 text-center p-4 mt-8">
+    <p>&copy; 2025 TT Race Control Centre</p>
+  </footer>
+</body>
+</html>

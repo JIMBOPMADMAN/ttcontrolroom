@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Race Control Team</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" href="Logo.ico" type="image/x-icon"/>
+  <style>
+    .favorite {
+      background-color: #fff8e1; /* Light yellow background for favorites */
+    }
+    .note-indicator::after {
+      content: "✏️";
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-red-700 text-white p-4 text-center">
+    <h1 class="text-2xl font-bold">Race Control Team</h1>
+    <p>Meet the experts keeping the TT safe and efficient</p>
+    <p id="lastVisited" class="text-sm opacity-75 mt-1"></p>
+  </header>
+
+  <nav class="bg-white shadow p-4 flex justify-center space-x-4">
+    <a href="index.html" class="text-red-700 font-bold">Dashboard</a>
+    <a href="incident_log.html" class="text-red-700 font-bold">Incident Log</a>
+    <a href="communication.html" class="text-red-700 font-bold">Communication</a>
+    <a href="team.html" class="text-red-700 font-bold">Control Team</a>
+    <a href="weather.html" class="text-red-700 font-bold">Weather Updates</a>
+  </nav>
+
+  <main class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="team-member bg-white p-4 rounded shadow relative" data-name="Gary Thompson">
+      <button class="favorite-btn absolute top-2 right-2 text-gray-400 hover:text-yellow-500">☆</button>
+      <h2 class="text-xl font-semibold">Gary Thompson</h2>
+      <p><strong>Role:</strong> Clerk of the Course</p>
+      <p><strong>Responsibility:</strong> Oversees race operations and digital flags</p>
+      <div class="mt-2">
+        <textarea class="member-note w-full p-2 border border-gray-300 rounded text-sm" placeholder="Add private notes about this team member..."></textarea>
+      </div>
+    </div>
+
+    <div class="team-member bg-white p-4 rounded shadow relative" data-name="Gary Hines">
+      <button class="favorite-btn absolute top-2 right-2 text-gray-400 hover:text-yellow-500">☆</button>
+      <h2 class="text-xl font-semibold">Gary Hines</h2>
+      <p><strong>Role:</strong> Dispatch Officer</p>
+      <p><strong>Responsibility:</strong> Monitors radio alerts from marshals</p>
+      <div class="mt-2">
+        <textarea class="member-note w-full p-2 border border-gray-300 rounded text-sm" placeholder="Add private notes about this team member..."></textarea>
+      </div>
+    </div>
+
+    <div class="team-member bg-white p-4 rounded shadow relative" data-name="Elaine Brown">
+      <button class="favorite-btn absolute top-2 right-2 text-gray-400 hover:text-yellow-500">☆</button>
+      <h2 class="text-xl font-semibold">Elaine Brown</h2>
+      <p><strong>Role:</strong> Sector Controller (1–4)</p>
+      <div class="mt-2">
+        <textarea class="member-note w-full p-2 border border-gray-300 rounded text-sm" placeholder="Add private notes about this team member..."></textarea>
+      </div>
+    </div>
+
+    <div class="team-member bg-white p-4 rounded shadow relative" data-name="Harry Barton">
+      <button class="favorite-btn absolute top-2 right-2 text-gray-400 hover:text-yellow-500">☆</button>
+      <h2 class="text-xl font-semibold">Harry Barton</h2>
+      <p><strong>Role:</strong> Deputy Clerk & Sector Controller (5–8)</p>
+      <div class="mt-2">
+        <textarea class="member-note w-full p-2 border border-gray-300 rounded text-sm" placeholder="Add private notes about this team member..."></textarea>
+      </div>
+    </div>
+
+    <div class="team-member bg-white p-4 rounded shadow relative" data-name="Chris Ward">
+      <button class="favorite-btn absolute top-2 right-2 text-gray-400 hover:text-yellow-500">☆</button>
+      <h2 class="text-xl font-semibold">Chris Ward</h2>
+      <p><strong>Role:</strong> Sector Controller (9–12)</p>
+      <div class="mt-2">
+        <textarea class="member-note w-full p-2 border border-gray-300 rounded text-sm" placeholder="Add private notes about this team member..."></textarea>
+      </div>
+    </div>
+
+    <div class="team-member bg-white p-4 rounded shadow relative" data-name="John Barton">
+      <button class="favorite-btn absolute top-2 right-2 text-gray-400 hover:text-yellow-500">☆</button>
+      <h2 class="text-xl font-semibold">John Barton</h2>
+      <p><strong>Role:</strong> Deputy Clerk & Safety Officer</p>
+      <p><strong>Background:</strong> Former TT competitor with 33 years of experience</p>
+      <div class="mt-2">
+        <textarea class="member-note w-full p-2 border border-gray-300 rounded text-sm" placeholder="Add private notes about this team member..."></textarea>
+      </div>
+    </div>
+
+    <div class="team-member bg-white p-4 rounded shadow relative" data-name="Pam Redmayne">
+      <button class="favorite-btn absolute top-2 right-2 text-gray-400 hover:text-yellow-500">☆</button>
+      <h2 class="text-xl font-semibold">Pam Redmayne</h2>
+      <p><strong>Role:</strong> Log keeper</p>
+      <div class="mt-2">
+        <textarea class="member-note w-full p-2 border border-gray-300 rounded text-sm" placeholder="Add private notes about this team member..."></textarea>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-gray-200 text-center p-4 mt-6">
+    <p>&copy; 2025 TT Race Control Centre</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set last visited time
+      const lastVisited = document.getElementById('lastVisited');
+      const lastVisit = localStorage.getItem('teamPageLastVisit');
+      if (lastVisit) {
+        lastVisited.textContent = `Last viewed: ${new Date(parseInt(lastVisit)).toLocaleString()}`;
+      }
+      localStorage.setItem('teamPageLastVisit', Date.now().toString());
+
+      // Load favorites and notes
+      const favorites = JSON.parse(localStorage.getItem('teamFavorites') || '{}');
+      const notes = JSON.parse(localStorage.getItem('teamNotes') || '{}');
+
+      document.querySelectorAll('.team-member').forEach(member => {
+        const name = member.dataset.name;
+        const favoriteBtn = member.querySelector('.favorite-btn');
+        const noteField = member.querySelector('.member-note');
+
+        // Set favorite state
+        if (favorites[name]) {
+          member.classList.add('favorite');
+          favoriteBtn.textContent = '★';
+          favoriteBtn.classList.add('text-yellow-500');
+        }
+
+        // Set note content
+        if (notes[name]) {
+          noteField.value = notes[name];
+          if (notes[name].trim()) {
+            member.querySelector('h2').classList.add('note-indicator');
+          }
+        }
+
+        // Favorite button click handler
+        favoriteBtn.addEventListener('click', function() {
+          const isFavorite = member.classList.toggle('favorite');
+          if (isFavorite) {
+            this.textContent = '★';
+            this.classList.add('text-yellow-500');
+            favorites[name] = true;
+          } else {
+            this.textContent = '☆';
+            this.classList.remove('text-yellow-500');
+            delete favorites[name];
+          }
+          localStorage.setItem('teamFavorites', JSON.stringify(favorites));
+        });
+
+        // Note field change handler
+        noteField.addEventListener('input', function() {
+          if (this.value.trim()) {
+            notes[name] = this.value;
+            member.querySelector('h2').classList.add('note-indicator');
+          } else {
+            delete notes[name];
+            member.querySelector('h2').classList.remove('note-indicator');
+          }
+          localStorage.setItem('teamNotes', JSON.stringify(notes));
+        });
+      });
+    });
+  </script>
+</body>
+</html>

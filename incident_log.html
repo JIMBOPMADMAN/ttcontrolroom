@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incident Log</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" href="Logo.ico" type="image/x-icon"/>
+</head>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-red-700 text-white p-4 text-center">
+    <h1 class="text-2xl font-bold">Incident Log</h1>
+    <p>Simulate and record real-time incidents from the TT course</p>
+  </header>
+
+  <nav class="bg-white shadow p-4 flex justify-center space-x-4">
+    <a href="index.html" class="text-red-700 font-bold">Dashboard</a>
+    <a href="incident_log.html" class="text-red-700 font-bold">Incident Log</a>
+    <a href="communication.html" class="text-red-700 font-bold">Communication</a>
+    <a href="team.html" class="text-red-700 font-bold">Control Team</a>
+    <a href="weather.html" class="text-red-700 font-bold">Weather Updates</a>
+  </nav>
+
+  <main class="p-6">
+    <form id="incidentForm" class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-xl font-semibold mb-2">Report New Incident</h2>
+      <label class="block mb-2">Location:
+        <input id="locationInput" type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g. Ballacraine">
+      </label>
+      <label class="block mb-2">Description:
+        <textarea id="descriptionInput" class="w-full p-2 border border-gray-300 rounded" placeholder="Brief incident description..."></textarea>
+      </label>
+      <label class="block mb-2">Action Taken:
+        <input id="actionInput" type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g. Red flag issued, medical team dispatched">
+      </label>
+      <button type="submit" class="bg-red-600 text-white px-4 py-2 mt-2 rounded">Submit Incident</button>
+    </form>
+
+    <section>
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-xl font-semibold">Logged Incidents</h2>
+        <button onclick="clearIncidents()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Clear All</button>
+      </div>
+      <ul id="incidentList" class="space-y-4">
+        <!-- Incidents will be added here dynamically -->
+      </ul>
+    </section>
+  </main>
+
+  <footer class="bg-gray-200 text-center p-4 mt-6">
+    <p>&copy; 2025 TT Race Control Centre</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById('incidentForm');
+    const incidentList = document.getElementById('incidentList');
+
+    // Load incidents from localStorage when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedIncidents = localStorage.getItem('ttIncidents');
+      if (savedIncidents) {
+        const incidents = JSON.parse(savedIncidents);
+        incidents.forEach(incident => {
+          addIncidentToDOM(incident);
+        });
+      }
+    });
+
+    // Function to add incident to DOM
+    function addIncidentToDOM(incident) {
+      const li = document.createElement('li');
+      li.className = 'bg-white p-4 rounded shadow';
+      li.innerHTML = `<p><strong>Location:</strong> ${incident.location}</p>
+                      <p><strong>Description:</strong> ${incident.description}</p>
+                      <p><strong>Action Taken:</strong> ${incident.action}</p>`;
+      incidentList.appendChild(li);
+    }
+
+    // Function to save all incidents to localStorage
+    function saveIncidentsToStorage() {
+      const incidents = [];
+      const listItems = incidentList.querySelectorAll('li');
+      
+      listItems.forEach(item => {
+        incidents.push({
+          location: item.querySelector('p:nth-child(1)').textContent.replace('Location: ', ''),
+          description: item.querySelector('p:nth-child(2)').textContent.replace('Description: ', ''),
+          action: item.querySelector('p:nth-child(3)').textContent.replace('Action Taken: ', '')
+        });
+      });
+      
+      localStorage.setItem('ttIncidents', JSON.stringify(incidents));
+    }
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const location = document.getElementById('locationInput').value;
+      const description = document.getElementById('descriptionInput').value;
+      const action = document.getElementById('actionInput').value;
+
+      if (location && description && action) {
+        const incident = { location, description, action };
+        addIncidentToDOM(incident);
+        saveIncidentsToStorage();
+        form.reset();
+      }
+    });
+
+    function clearIncidents() {
+      if (confirm('Are you sure you want to clear all incidents?')) {
+        incidentList.innerHTML = '';
+        localStorage.removeItem('ttIncidents');
+      }
+    }
+
+    // Optional: Save data when page is unloaded
+    window.addEventListener('beforeunload', saveIncidentsToStorage);
+  </script>
+</body>
+</html>
